@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+
+	body {
+		text-align: center;
+	}
+	form {
+		display: inline-block;
+	}
+
+</style>
+</head>
+<body>
+
+<h1>User Login</h1>
+
+<form action="http://localhost:8000" method="POST">
+	<input type="hidden" id="formId" name="formId" value="login">
+
+	<label for="username">Username:</label><br>
+	<input id="user" type="text" id="user" name="user" required><br><br>
+
+	<label for="pwd">Password:</label><br>
+	<input id="pass" type="password" id="pwd" name="pwd" required><br><br><br>
+
+	<input id="login" type="submit" value="Login">
+	<button id="clear" type="button">Clear</button>
+	<button id="cancel" type="button">Cancel</button>
+
+	<input type="hidden" id="sessionId" name="sessionId" value="12345">
+
+</form>
+
+
+
+<script>
+	document.getElementById("clear").onclick = function () {
+		document.getElementById("user").value = "";
+		document.getElementById("pass").value = "";
+	};
+	
+	document.getElementById("cancel").onclick = function () {
+		location.href = "index.html";
+	};
+</script>
+
+
+</body>
+</html>
