@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8"/>
 <style type="text/css">
 
 	body {
@@ -12,11 +13,13 @@
 
 <h1>Session timed out!</h1>
 
-<button id="reset" type="button">Retry</button>
+<img src="http://localhost:8000/sleepy_tux.jpg" alt="Sleepy Tux"><br>
+
+<button id="reset" type="button" class="block">Retry</button>
 
 <script>
 	document.getElementById("reset").onclick = function () {
-		location.href = "login_page.html";
+		location.href = "index.html";
 	};
 </script>
 

@@ -19,8 +19,12 @@
 import random
 import string
 import urllib.parse as up
-import pathlib
+from pathlib import Path
+import os
 from http.server import HTTPServer, BaseHTTPRequestHandler
+
+from cryptography.fernet import Fernet
+
 
 session_string = ""
 
@@ -97,7 +101,7 @@ class WebServer(BaseHTTPRequestHandler):
 					# TODO: Create Success Screen
 					print("Success!")
 				else:
-					print("Error, User name is already taken!")
+					self.do_KICK("/name_collision.html")
 				
 
 	# Kick Client to target path
@@ -115,6 +119,20 @@ class WebServer(BaseHTTPRequestHandler):
 		# TODO: Check for users with same name, register new user
 		return False
 		
+		
+	def encrypt(self, data):
+		k = Fernet(self.get_key())
+		return k.encrypt(data.encode())
+		
+	def decrypt(self, data):
+		k = Fernet(self.get_key())
+		return k.decrypt(data)
+		
+	def get_key(self):
+		dir_path = os.cwd()
+		f_path = dir_path + "/.password.pass"
+		return open(f_path, "rb").read()
+
 
 def run(server_class=HTTPServer, handler_class=WebServer, addr="localhost", port=8000):
 	server_address = (addr, port)
@@ -127,8 +145,22 @@ def run(server_class=HTTPServer, handler_class=WebServer, addr="localhost", port
 		pass
 	httpd.server_close()
 
-if __name__ == "__main__":
+def on_first():
+	dir_path = os.getcwd()
+	f_path = dir_path + "/.password.pass"
+	if not Path(f_path).is_file():
+		try:
+			p_file = open(".password.pass", "wb+")
+			key = Fernet.generate_key()
+			p_file.write(key)
+			p_file.close()
+		except Exception as e:
+			print(e)
+	else:
+		pass
 
+if __name__ == "__main__":
+	on_first()
 	run(addr="localhost", port=8000)
     
     
