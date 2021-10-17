@@ -203,7 +203,7 @@ def on_first_entry():
 		quote = "With software there are only two possibilities: either the users control the program or the program controls the users. -RMS"
 		pwd = "Password123"
 		key = ss.hash_it(pwd)
-		demo_entry = {"Kevin":{"Secret":quote, "Key":key}}
+		demo_entry = {"Richard":{"Secret":quote, "Key":key}}
 		try:
 			f = open(users_path, "wb+")
 			f.write(ss.encrypt(str(demo_entry)))

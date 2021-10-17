@@ -31,7 +31,8 @@ http://localhost:8000
 5. Try to break the app
 
 ## Test Example
-You can create new user accounts by clicking the create user button. One account is already registered when first launching the http server. To test the login credentials are:
+You can create new user accounts by clicking the create user button. One account is already registered when first launching the http server.
+To test the login credentials are:
 ```
 Username: Richard
 Password: Password123
