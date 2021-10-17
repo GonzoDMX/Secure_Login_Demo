@@ -39,8 +39,10 @@ Username: Richard
 Password: Password123
 ```
 
-## Note for Security testing
-This demonstration is a bit contrived. Since you will be running the server locally it would be relatively easy to reverse engineer the security by reading the source code. For testing purposes lets assume that your only access point is the web browser / network, as would be the case if this were a deployed website.
+## IMPORTANT: Notes for Security testing
+This demonstration is optimized it for portability. The HTTP Server does not implement any kind of multithreading so it is highly vulnerable to DOS attacks. Simply connecting from two separate web browsers will cause problems. Additionally, I chose not to implement a proper database for storing user accounts information. Again, the choice was in order to make this program more portable. Since you will be running the server locally it would be relatively easy to reverse engineer the security by reading the source code. For testing purposes lets assume that your only access point is the web browser / network, as would be the case if this were a deployed website.
+
+Lastly, and maybe it doesn't need to be said, this program is not fit for production. It might be a suitable example for lightweight hobby projects running on a local network. However, consider yourself warned, if you use this code to deploy a website you're gonna have a bad time.
 
 
 ---
@@ -87,4 +89,6 @@ Le mot de passe:   Password123
 ```
 
 ## Remarque pour les tests de sécurité
-Cette démonstration est un peu artificielle. Étant donné que vous exécuterez le serveur localement, il serait relativement facile de désosser la sécurité en lisant le code source. À des fins de test, supposons que votre seul point d'accès est le navigateur Web / réseau (Comme s'il s'agissait d'un site Web déployé).
+Cette démonstration est optimisée pour la portabilité. Le serveur HTTP n'implémente aucun type de multithreading, il est donc très vulnérable aux attaques DOS. Le simple fait de se connecter à partir de deux navigateurs Web en même temps distincts causera des problèmes. De plus, j'ai choisi de ne pas implémenter une base de données pour stocker les informations des comptes d'utilisateurs. Encore une fois, le choix était de rendre ce programme plus portable. Étant donné que vous exécuterez le serveur localement, il serait relativement facile de déconstruire la sécurité en lisant le code source. À des fins de test, supposons que votre seul point d'accès est le navigateur Web / réseau  (Comme s'il s'agissait d'un site Web déployé).
+
+Enfin, et peut-être qu'il n'est pas nécessaire de le dire, ce programme n'est pas adapté à la production. Cela peut être un exemple approprié pour les projets de loisirs exécutés sur un réseau local. Cependant, considérez-vous prévenu, si vous utilisez ce code pour déployer un site Web, vous allez avoir du mal.
