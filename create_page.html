@@ -14,11 +14,6 @@
 <body>
 <script type="text/javascript">
 	function checkForm(form) {
-		if(form.user.value == "") {
-			alert("Error: Username cannot be blank!");
-			form.user.focus();
-			return false;
-		}
 		re = /^\w+$/;
 		if(!re.test(form.user.value)) {
 			alert("Error: Username must contain only letters, numbers and underscores!");

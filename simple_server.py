@@ -16,25 +16,23 @@
 	   (Testé sur Ubuntu 20.04 avec Python 3.8.8 et Firefox 92.0)
 """
 
-import random
 import string
 import urllib.parse as up
 from pathlib import Path
 import os
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
-from cryptography.fernet import Fernet
+import simple_security as ss
 
 
 session_string = ""
 
+restricted_words = [".password.pass", ".my_accounts.db", ".py"]
+
+users_path = ".my_accounts.db"
+
 """ Simple HTTP Server that handles GET and POST """
 class WebServer(BaseHTTPRequestHandler):
-	# Generates a random string, used for validating a session
-	def random_string(self, length):
-		letters = string.ascii_lowercase
-		result_str = ''.join(random.choice(letters) for i in range(length))
-		return result_str
 
 	# Set HTML Doc type headers
 	def _set_headers(self):
@@ -45,25 +43,16 @@ class WebServer(BaseHTTPRequestHandler):
 	# Push GET Request to Clients
 	def do_GET(self):
 		global session_string
+		global restricted_words
 		# Check path, if none send to home page
 		if self.path == '/':
-			# self.path = "/access_refused.html"
 			self.path = "/index.html"
-		self._set_headers()
-		# for handling images
-		if self.path[-4:] == ".jpg" or self.path[-4:] == ".ico":
-			html = open(self.path[1:], "rb").read()
-			# Push image to client
-			self.wfile.write(html)
-		elif self.path[-4:] == "html":
-			# Read HTML doc as String
-			html = open(self.path[1:], "r").read()
-			# Generate session ID string and overwrite session Id value in HTML
-			session_string = self.random_string(10)
-			if self.path == "/login_page.html" or self.path == "/create_page.html":
-				html = html.replace("12345", session_string)
-			# Push web page to client
-			self.wfile.write(html.encode('utf-8'))
+		# Check for illegal access
+		for elem in restricted_words:
+			if elem in self.path:
+				self.path = "/access_refused.html"	
+		self.do_KICK(self.path)
+
 
 	def do_HEAD(self):
 		self._set_headers()
@@ -94,73 +83,90 @@ class WebServer(BaseHTTPRequestHandler):
 					self.do_KICK("/access_refused.html")
 			elif form_type == "create":
 				user = parsed_data['user'][0]
-				pwd = parsed_data['pwd1'][0]
+				pwd1 = parsed_data['pwd1'][0]
+				pwd2 = parsed_data['pwd2'][0]
 				secret = parsed_data['secret'][0]
-				print(secret)
-				if self.user_create(user, pwd):
+				if self.user_create(user, pwd1, pwd2, secret):
 					# TODO: Create Success Screen
 					print("Success!")
-				else:
-					self.do_KICK("/name_collision.html")
+					
 				
 
-	# Kick Client to target path
+	# Feed Client the target page
 	def do_KICK(self, target):
-		self.path = target
-		self._set_headers
-		html = open(self.path[1:], "r").read()
-		self.wfile.write(html.encode('utf-8'))
+		self._set_headers()
+		# for handling images
+		if target[-4:] == ".jpg" or target[-4:] == ".ico":
+			html = open(target[1:], "rb").read()
+			# Push image to client
+			self.wfile.write(html)
+		elif target[-4:] == "html":
+			# Read HTML doc as String
+			html = open(target[1:], "r").read()
+			# If accessing login or create page set Session Id
+			if target == "/login_page.html" or target == "/create_page.html":
+				# Generate session ID string and overwrite session Id value in HTML
+				session_string = ss.random_string(16)
+				# Overwrite default session id
+				html = html.replace("12345", session_string)
+			# Push web page to client
+			self.wfile.write(html.encode('utf-8'))
 		
 	def user_login(self, user, pwd):
+		# Check if Javascript has been disactivated
+		if not ss.name_check(user) or not ss.pwd_check(pwd, pwd):
+			self.do_KICK("/error_page.html")
+			return False
 		# TODO: Check user name and password here
 		return False
 		
-	def user_create(self, user, pwd):
-		# TODO: Check for users with same name, register new user
-		return False
-		
-		
-	def encrypt(self, data):
-		k = Fernet(self.get_key())
-		return k.encrypt(data.encode())
-		
-	def decrypt(self, data):
-		k = Fernet(self.get_key())
-		return k.decrypt(data)
-		
-	def get_key(self):
-		dir_path = os.cwd()
-		f_path = dir_path + "/.password.pass"
-		return open(f_path, "rb").read()
+	def user_create(self, user, pwd1, pwd2, secret):
+		# Check if Javascript has been disactivated
+		if not ss.name_check(user) or not ss.pwd_check(pwd1, pwd2):
+			self.do_KICK("/error_page.html")
+			return False
+		# Check if Username already exists
+		if not user:
+			self.do_KICK("/name_collision.html")
+			return False
+		# TODO: Register new user here
+		return True
 
 
 def run(server_class=HTTPServer, handler_class=WebServer, addr="localhost", port=8000):
 	server_address = (addr, port)
 	httpd = server_class(server_address, handler_class)
 
-	print(f"Starting httpd server on {addr}:{port}")
+	print(f"Starting http server on {addr}:{port}")
 	try:
 		httpd.serve_forever()
 	except KeyboardInterrupt:
 		pass
 	httpd.server_close()
 
-def on_first():
-	dir_path = os.getcwd()
-	f_path = dir_path + "/.password.pass"
-	if not Path(f_path).is_file():
+
+# Set Database with demo entry,
+def on_first_entry():
+	global users_path
+	if not Path(users_path).is_file():
+		quote = "With software there are only two possibilities: either the users control the program or the program controls the users. -RMS"
+		pwd = "Password123"
+		key = ss.hash_it(pwd)
+		demo_entry = {"Name":"Kevin", "Secret":quote, "Key":key}
 		try:
-			p_file = open(".password.pass", "wb+")
-			key = Fernet.generate_key()
-			p_file.write(key)
+			p_file = open(users_path, "wb+")
+			# TODO Encrypt dict here
+			p_file.write(key.encode('utf-8'))
 			p_file.close()
 		except Exception as e:
 			print(e)
 	else:
 		pass
 
+
 if __name__ == "__main__":
-	on_first()
+	ss.key_check()
+	on_first_entry()
 	run(addr="localhost", port=8000)
     
     

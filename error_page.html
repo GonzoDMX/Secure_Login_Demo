@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<style type="text/css">
+
+	body {
+		text-align: center;
+	}
+</style>
+</head>
+<body>
+
+<h1>Something has gone terribly wrong!</h1>
+
+<img src="http://localhost:8000/terribly_wrong.jpg" alt="Something is wrong!"><br>
+
+<button id="reset" type="button" class="block">Retry</button>
+
+<script>
+	document.getElementById("reset").onclick = function () {
+		location.href = "index.html";
+	};
+</script>
+
+</body>
+</html>
