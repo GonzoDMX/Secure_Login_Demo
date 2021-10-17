@@ -12,5 +12,7 @@ This is a university project demonstrating a secure user create and login scheme
 	
 ## Instructions
 1. Install python cryptography library
-	pip3 install cryptography
+'''
+pip3 install cryptography
+'''
 2. 
