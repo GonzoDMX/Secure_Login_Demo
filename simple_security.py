@@ -5,7 +5,7 @@
 	Créé par: Andrew O'Shei
 """
 
-import json
+import ast
 import string
 import random
 import hashlib
@@ -86,6 +86,5 @@ def pwd_check(pwd1, pwd2):
 
 # Converts a string to dictionary
 def convert_dict(data):
-	d = data.replace("\'", "\"")
-	return json.loads(d)
+	return ast.literal_eval(data)
 

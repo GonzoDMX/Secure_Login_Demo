@@ -119,9 +119,9 @@ class WebServer(BaseHTTPRequestHandler):
 		if user in data:
 			h = ss.hash_it(pwd)
 			if h == data[user]["Key"]:
-				print(data[user]["Secret"])
+				secret = data[user]["Secret"]
 				data.clear()
-				# TODO: Create user logged in successfully page
+				self.do_LOGIN(user, secret)
 				return True
 			# Password is not correct!
 			else:
@@ -148,14 +148,23 @@ class WebServer(BaseHTTPRequestHandler):
 			key = ss.hash_it(pwd1)
 			data[user] = {"Secret":secret, "Key":key}
 			if self.write_data(data):
-				# TODO: Create user creation success page
 				data.clear()
+				self.do_KICK("/new_user.html")
 				return True
 			# If file failed to write
 			else:
 				data.clear()
 				self.do_KICK("/error_page.html")
 				return False
+
+	# Send user to Welcome page
+	def do_LOGIN(self, user, secret):
+		self.path = "/welcome_page.html"
+		self._set_headers()
+		html = open(self.path[1:], "r").read()
+		html = html.replace("USERNAME", user).replace("MESSAGE", secret)
+		self.wfile.write(html.encode('utf-8'))
+		
 
 	# Get decrypted data as a dict
 	def get_data(self):
@@ -212,10 +221,10 @@ def test_entry():
 	if Path(users_path).is_file():
 		try:
 			f = open(users_path, "rb")
-			data = ss.convert_dict(ss.decrypt(f.read()))
-			# print(str(data))
-			# print("data type: " + str(type(data)))
-			# print("Kevin's Secret: " + str(data["Kevin"]["Secret"]))
+			d = ss.decrypt(f.read())
+			print(d)					# Print Data as string
+			data = ss.convert_dict(d)
+			print(str(data))			# Print Data as dictionary
 			f.close()
 		except Exception as e:
 			print(e)
@@ -224,7 +233,7 @@ def test_entry():
 if __name__ == "__main__":
 	ss.key_check()
 	on_first_entry()
-	test_entry()
+	# test_entry()
 	run(addr="localhost", port=8000)
     
     
