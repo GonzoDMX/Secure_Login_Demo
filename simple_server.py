@@ -62,10 +62,8 @@ class WebServer(BaseHTTPRequestHandler):
 		content_len = int(self.headers['Content-Length'])
 		# Get POST data as decoded byte string
 		post_data = self.rfile.read(content_len).decode('utf-8')
-		self._set_headers()
 		# Convert POST data to dictionary of lists
 		parsed_data = up.parse_qs(post_data)
-		print("This is Parsed data: " + str(parsed_data))
 		form_type = parsed_data['formId'][0]
 		session_id = parsed_data['sessionId'][0]
 		if session_id != session_string:
