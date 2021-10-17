@@ -77,19 +77,15 @@ class WebServer(BaseHTTPRequestHandler):
 				user = parsed_data['user'][0]
 				pwd = parsed_data['pwd'][0]
 				if self.user_login(user, pwd):
-					print("Success!")
-				else:
-					self.do_KICK("/access_refused.html")
+					print("Log: User " + user + " has logged in successfully!")
 			elif form_type == "create":
 				user = parsed_data['user'][0]
 				pwd1 = parsed_data['pwd1'][0]
 				pwd2 = parsed_data['pwd2'][0]
 				secret = parsed_data['secret'][0]
 				if self.user_create(user, pwd1, pwd2, secret):
-					# TODO: Create Success Screen
-					print("Success!")
+					print("Log: New user " + user + " created successfully!")
 					
-				
 
 	# Feed Client the target page
 	def do_KICK(self, target):
@@ -112,25 +108,30 @@ class WebServer(BaseHTTPRequestHandler):
 			# Push web page to client
 			self.wfile.write(html.encode('utf-8'))
 		
+	# Method for logging into user account
 	def user_login(self, user, pwd):
 		# Check if Javascript has been disactivated
 		if not ss.name_check(user) or not ss.pwd_check(pwd, pwd):
 			self.do_KICK("/error_page.html")
 			return False
 		data = self.get_data()
+		# Check if user is in database
 		if user in data:
 			h = ss.hash_it(pwd)
 			if h == data[user]["Key"]:
 				print(data[user]["Secret"])
 				data.clear()
+				# TODO: Create user logged in successfully page
 				return True
+			# Password is not correct!
 			else:
 				data.clear()
-				print("Password incorrect!")
+				self.do_KICK("/access_refused.html")
 				return False
+		# User does not exist in database
 		else:
 			data.clear()
-			print("User does not exist")
+			self.do_KICK("/access_refused.html")
 			return False
 		
 	def user_create(self, user, pwd1, pwd2, secret):
@@ -147,13 +148,16 @@ class WebServer(BaseHTTPRequestHandler):
 			key = ss.hash_it(pwd1)
 			data[user] = {"Secret":secret, "Key":key}
 			if self.write_data(data):
+				# TODO: Create user creation success page
 				data.clear()
 				return True
+			# If file failed to write
 			else:
 				data.clear()
+				self.do_KICK("/error_page.html")
 				return False
 
-	# Get decrypted data
+	# Get decrypted data as a dict
 	def get_data(self):
 		global users_path
 		f = open(users_path, "rb")
@@ -209,9 +213,9 @@ def test_entry():
 		try:
 			f = open(users_path, "rb")
 			data = ss.convert_dict(ss.decrypt(f.read()))
-			print(str(data))
-			print("data type: " + str(type(data)))
-			print("Kevin's Secret: " + str(data["Kevin"]["Secret"]))
+			# print(str(data))
+			# print("data type: " + str(type(data)))
+			# print("Kevin's Secret: " + str(data["Kevin"]["Secret"]))
 			f.close()
 		except Exception as e:
 			print(e)
