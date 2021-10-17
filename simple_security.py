@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-	Crypto functions for supporting the Python HTTP Server
+	Crypto functions for supporting the Python HTTP Server simple_server.py
 	Créé par: Andrew O'Shei
 """
 
