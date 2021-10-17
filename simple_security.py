@@ -5,6 +5,7 @@
 	Créé par: Andrew O'Shei
 """
 
+import json
 import string
 import random
 import hashlib
@@ -82,4 +83,9 @@ def pwd_check(pwd1, pwd2):
 	if pwd1 == pwd2 and len(pwd1) > 8 and pwd1.isprintable():
 		return True
 	return False
-	
+
+# Converts a string to dictionary
+def convert_dict(data):
+	d = data.replace("\'", "\"")
+	return json.loads(d)
+

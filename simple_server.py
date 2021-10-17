@@ -16,7 +16,6 @@
 	   (Testé sur Ubuntu 20.04 avec Python 3.8.8 et Firefox 92.0)
 """
 
-import string
 import urllib.parse as up
 from pathlib import Path
 import os
@@ -27,7 +26,7 @@ import simple_security as ss
 
 session_string = ""
 
-restricted_words = [".password.pass", ".my_accounts.db", ".py"]
+restricted_words = [".pass", ".db", ".py"]
 
 users_path = ".my_accounts.db"
 
@@ -94,6 +93,7 @@ class WebServer(BaseHTTPRequestHandler):
 
 	# Feed Client the target page
 	def do_KICK(self, target):
+		global session_string
 		self._set_headers()
 		# for handling images
 		if target[-4:] == ".jpg" or target[-4:] == ".ico":
@@ -117,21 +117,61 @@ class WebServer(BaseHTTPRequestHandler):
 		if not ss.name_check(user) or not ss.pwd_check(pwd, pwd):
 			self.do_KICK("/error_page.html")
 			return False
-		# TODO: Check user name and password here
-		return False
+		data = self.get_data()
+		if user in data:
+			h = ss.hash_it(pwd)
+			if h == data[user]["Key"]:
+				print(data[user]["Secret"])
+				data.clear()
+				return True
+			else:
+				data.clear()
+				print("Password incorrect!")
+				return False
+		else:
+			data.clear()
+			print("User does not exist")
+			return False
 		
 	def user_create(self, user, pwd1, pwd2, secret):
 		# Check if Javascript has been disactivated
 		if not ss.name_check(user) or not ss.pwd_check(pwd1, pwd2):
 			self.do_KICK("/error_page.html")
 			return False
+		data = self.get_data()
 		# Check if Username already exists
-		if not user:
+		if user in data:
 			self.do_KICK("/name_collision.html")
 			return False
-		# TODO: Register new user here
-		return True
+		else:
+			key = ss.hash_it(pwd1)
+			data[user] = {"Secret":secret, "Key":key}
+			if self.write_data(data):
+				data.clear()
+				return True
+			else:
+				data.clear()
+				return False
 
+	# Get decrypted data
+	def get_data(self):
+		global users_path
+		f = open(users_path, "rb")
+		data = ss.convert_dict(ss.decrypt(f.read()))
+		f.close()
+		return data
+		
+	# Encrypt data and write to file
+	def write_data(self, data):
+		global users_path
+		try:
+			f = open(users_path, "wb+")
+			f.write(ss.encrypt(str(data)))
+			f.close()
+			return True
+		except Exception as e:
+			print(e)
+			return False
 
 def run(server_class=HTTPServer, handler_class=WebServer, addr="localhost", port=8000):
 	server_address = (addr, port)
@@ -152,21 +192,35 @@ def on_first_entry():
 		quote = "With software there are only two possibilities: either the users control the program or the program controls the users. -RMS"
 		pwd = "Password123"
 		key = ss.hash_it(pwd)
-		demo_entry = {"Name":"Kevin", "Secret":quote, "Key":key}
+		demo_entry = {"Kevin":{"Secret":quote, "Key":key}}
 		try:
-			p_file = open(users_path, "wb+")
-			# TODO Encrypt dict here
-			p_file.write(key.encode('utf-8'))
-			p_file.close()
+			f = open(users_path, "wb+")
+			f.write(ss.encrypt(str(demo_entry)))
+			f.close()
 		except Exception as e:
 			print(e)
 	else:
 		pass
 
+# Decrypt and return data as dict example
+def test_entry():
+	global users_path
+	if Path(users_path).is_file():
+		try:
+			f = open(users_path, "rb")
+			data = ss.convert_dict(ss.decrypt(f.read()))
+			print(str(data))
+			print("data type: " + str(type(data)))
+			print("Kevin's Secret: " + str(data["Kevin"]["Secret"]))
+			f.close()
+		except Exception as e:
+			print(e)
+
 
 if __name__ == "__main__":
 	ss.key_check()
 	on_first_entry()
+	test_entry()
 	run(addr="localhost", port=8000)
     
     
