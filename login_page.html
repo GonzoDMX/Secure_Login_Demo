@@ -31,6 +31,7 @@
 	};
 </script>
 
+<img src="http://localhost:8000/assets/logo.jpg" alt="Datathief Logo">
 
 <h1>User Login</h1>
 
@@ -44,14 +45,13 @@
 	<input name="pwd" id="pass" type="password" autocomplete="password123" required><br><br><br>
 
 	<input id="login" type="submit" value="Login">
-	<button id="clear" type="button">Clear</button>
-	<button id="cancel" type="button">Cancel</button>
+	<button id="clear" type="button">Reset</button>
 
 	<input type="hidden" id="sessionId" name="sessionId" value="12345">
 
-</form>
+</form><br><br>
 
-
+<button id="goto_create" type="button">Create User</button>
 
 <script>
 	document.getElementById("clear").onclick = function () {
@@ -59,9 +59,10 @@
 		document.getElementById("pass").value = "";
 	};
 	
-	document.getElementById("cancel").onclick = function () {
-		location.href = "index.html";
+	document.getElementById("goto_create").onclick = function () {
+		location.href = "http://localhost:8000/create_page.html";
 	};
+	
 </script>
 
 
