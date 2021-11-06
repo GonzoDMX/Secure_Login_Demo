@@ -20,7 +20,7 @@ pip3 install cryptography
 ```
 apt install authbind
 ```
-*NOTE:* Authbind is used to grant onetime access to port 443, for security, this is preferable to running the server as root.<br />
+*NOTE:* Authbind is used to grant onetime access to port 443, for security, this is preferable to running the server as root.<br /><br />
 3. Download all files to a common directory
 ```
 git clone https://github.com/GonzoDMX/Secure_Login_Demo.git
@@ -92,7 +92,7 @@ pip3 install cryptography
 ```
 apt install authbind
 ```
-*NOTE:* Authbind est utilisé pour accorder un accès au port 443.<br />
+*NOTE:* Authbind est utilisé pour accorder un accès au port 443.<br /><br />
 3. Télécharger tous les fichiers dans un répertoire commun
 ```
 git clone https://github.com/GonzoDMX/Secure_Login_Demo.git
