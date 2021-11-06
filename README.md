@@ -16,7 +16,7 @@ This is a university project demonstrating a secure user create and login scheme
 ```
 pip3 install cryptography
 ```
-2. Install authbind (Otherwise the server must be run as root, not reccomended)<br />
+2. Install authbind (Otherwise the server must be run as root, not recommended)<br />
 ```
 apt install authbind
 ```
@@ -88,11 +88,11 @@ Il s'agit d'un projet universitaire démontrant un schéma sécurisé de créati
 ```
 pip3 install cryptography
 ```
-2. Install authbind (Otherwise server must be run as root, not reccomended)<br />
+2. Installer authbind (Sinon, le serveur doit être exécuté en tant que root, non recommandé)<br />
 ```
 apt install authbind
 ```
-*NOTE:* Authbind is used to grant onetime access to port 443, for security, this is preferable to running the server as root.
+*NOTE:* Authbind est utilisé pour accorder un accès au port 443.
 3. Télécharger tous les fichiers dans un répertoire commun
 ```
 git clone https://github.com/GonzoDMX/Secure_Login_Demo.git
@@ -105,7 +105,7 @@ cd ~/Secure_Login_Demo
 ```
 openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365
 ```
-6. Setup authbind permissions
+6. Configurer les autorisations du authbind
 ```
 sudo touch /etc/authbind/byport/443
 sudo chmod 777 /etc/authbind/byport/443
