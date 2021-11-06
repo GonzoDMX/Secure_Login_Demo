@@ -16,6 +16,7 @@
 	   (Testé sur Ubuntu 20.04 avec Python 3.8.8 et Firefox 92.0)
 """
 
+import ssl
 import urllib.parse as up
 from pathlib import Path
 import os
@@ -27,6 +28,8 @@ import simple_security as ss
 session_string = ""
 
 restricted_words = [".pass", ".db", ".py"]
+
+valid_pages = list()
 
 users_path = ".my_accounts.db"
 
@@ -49,7 +52,9 @@ class WebServer(BaseHTTPRequestHandler):
 		# Check for illegal access
 		for elem in restricted_words:
 			if elem in self.path:
-				self.path = "/access_refused.html"	
+				self.path = "/access_refused.html"
+		if self.path[1:] not in valid_pages:
+			self.path = "/error_404.html"
 		self.do_KICK(self.path)
 
 
@@ -187,7 +192,7 @@ class WebServer(BaseHTTPRequestHandler):
 def run(server_class=HTTPServer, handler_class=WebServer, addr="localhost", port=8000):
 	server_address = (addr, port)
 	httpd = server_class(server_address, handler_class)
-
+	httpd.socket = ssl.wrap_socket(httpd.socket, server_side=True, keyfile="key.pem", certfile="cert.pem", ssl_version=ssl.PROTOCOL_TLS)
 	print(f"Starting http server on {addr}:{port}")
 	try:
 		httpd.serve_forever()
@@ -207,6 +212,7 @@ def on_first_entry():
 		try:
 			f = open(users_path, "wb+")
 			f.write(ss.encrypt(str(demo_entry)))
+			os.chmod(users_path, 0o665)
 			f.close()
 		except Exception as e:
 			print(e)
@@ -227,11 +233,22 @@ def test_entry():
 		except Exception as e:
 			print(e)
 
+def get_valid():
+	global valid_pages
+	for file in os.listdir(os.getcwd()):
+		if file.endswith(".html"):
+			if file != "welcome_page.html":
+				valid_pages.append(file)
+	for file in os.listdir(os.getcwd() + "/assets"):
+		if file.endswith(".jpg"):
+			valid_pages.append("assets/" + file)
+	#print(valid_pages)
 
 if __name__ == "__main__":
 	ss.key_check()
 	on_first_entry()
+	get_valid()
 	# test_entry()
-	run(addr="localhost", port=8000)
+	run(addr="localhost", port=443)
     
     

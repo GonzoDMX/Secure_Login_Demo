@@ -5,6 +5,7 @@
 	Créé par: Andrew O'Shei
 """
 
+import os
 import ast
 import string
 import random
@@ -61,6 +62,7 @@ def key_check():
 		try:
 			f = open(key_path, "wb+")
 			f.write(keygen())
+			os.chmod(key_path, 0o444)
 			f.close()
 		except Exception as e:
 			print(e)

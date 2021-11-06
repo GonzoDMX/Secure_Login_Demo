@@ -3,14 +3,12 @@
 <head>
 <meta charset="utf-8"/>
 <style type="text/css">
-
 	body {
 		text-align: center;
 	}
 	form {
 		display: inline-block;
 	}
-
 </style>
 </head>
 <body>
@@ -31,11 +29,11 @@
 	};
 </script>
 
-<img src="http://localhost:8000/assets/logo.jpg" alt="Datathief Logo">
+<img src="assets/logo.jpg" alt="Datathief Logo">
 
 <h1>User Login</h1>
 
-<form name="loginForm" onsubmit="return checkForm(this);" action="http://localhost:8000" method="POST">
+<form name="loginForm" onsubmit="return checkForm(this);" action="" method="POST">
 	<input type="hidden" id="formId" name="formId" value="login">
 
 	<label for="username">Username:</label><br>
@@ -60,7 +58,7 @@
 	};
 	
 	document.getElementById("goto_create").onclick = function () {
-		location.href = "http://localhost:8000/create_page.html";
+		location.href = "create_page.html";
 	};
 	
 </script>
