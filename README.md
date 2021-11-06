@@ -99,7 +99,7 @@ sudo python3 simple_server.py
 7. Entrer le mot de passe PEM lorsque vous y êtes invité (créé à l'étape 4)<br />
 8. À l'aide de votre navigateur Web préféré, accédez à l'URL suivante
 ```
-http://localhost:8000
+https://localhost:8000
 ```
 *NOTE:* Le certificat SSL étant auto-signé, votre navigateur Web peut se plaindre d'un risque de sécurité<br />
 Chrome: cliquer *Advanced* puis *Proceed to localhost (unsafe)*<br />
