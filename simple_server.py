@@ -33,6 +33,20 @@ valid_pages = list()
 
 users_path = ".my_accounts.db"
 
+""" CSP Headers to defend agains XSS attacks"""
+login_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-37/2SrUmQiOoXn3BP+MP91PCfSH2HFYamrogydqmFDg=' 'sha256-4BSlqwTfCxFbiFBfWZBcDxmjyvXL2ynJUFqLRCwGFxY='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='"
+
+create_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-zWwZgvYmWJv0ndciZpYZDXGL7+ExzX+Qg9OpT8OnO1c=' 'sha256-QOBtvJcHLER/MHDRFA8eJII/SsvBwaFyuzOqI4GNBiM='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='"
+
+message_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-fZhG2bh1opVQ+neDYdEzZcNPV/SbhhdP8l+/+xGBdn4='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='"
+
+welcome_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-fZhG2bh1opVQ+neDYdEzZcNPV/SbhhdP8l+/+xGBdn4='; img-src 'self'; style-src 'sha256-8nKI3BVBQRYZ/xsA+lWQzWffMS1/2WoV4jzan5Ekct0='"
+
+error_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-fZhG2bh1opVQ+neDYdEzZcNPV/SbhhdP8l+/+xGBdn4='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='"
+
+collision_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-eP0G2JixgtEZmzxjdbJjtBslaaWwZYGF9OsTEVmz3Wc='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='"
+
+
 """ Simple HTTP Server that handles GET and POST """
 class WebServer(BaseHTTPRequestHandler):
 
@@ -40,6 +54,18 @@ class WebServer(BaseHTTPRequestHandler):
 	def _set_headers(self):
 		self.send_response(200)
 		self.send_header("Content-type", "text/html")
+		if "login_page.html" in self.path:
+			self.send_header("Content-Security-Policy", login_header)
+		elif "create_page.html" in self.path:
+			self.send_header("Content-Security-Policy", create_header)
+		elif "welcome_page.html" in self.path:
+			self.send_header("Content-Security-Policy", welcome_header)
+		elif "name_collision.html" in self.path:
+			self.send_header("Content-Security-Policy", collision_header)
+		elif "error_page.html" in self.path or "access_refused.html" in self.path:
+			self.send_header("Content-Security-Policy", error_header)
+		else:
+			self.send_header("Content-Security-Policy", message_header)
 		self.end_headers()
 
 	# Push GET Request to Clients
@@ -93,6 +119,7 @@ class WebServer(BaseHTTPRequestHandler):
 	# Feed Client the target page
 	def do_KICK(self, target):
 		global session_string
+		self.path = target
 		self._set_headers()
 		# for handling images
 		if target[-4:] == ".jpg" or target[-4:] == ".ico":
@@ -243,10 +270,12 @@ def get_valid():
 		if file.endswith(".html"):
 			if file != "welcome_page.html":
 				valid_pages.append(file)
+		if file.endswith(".css"):
+			valid_pages.append(file)
 	for file in os.listdir(os.getcwd() + "/assets"):
 		if file.endswith(".jpg"):
 			valid_pages.append("assets/" + file)
-	#print(valid_pages)
+	print(valid_pages)
 
 if __name__ == "__main__":
 	ss.key_check()

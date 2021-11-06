@@ -33,7 +33,8 @@ cd ~/Secure_Login_Demo
 ```
 openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365
 ```
-*IMPORTANT:* Remember the PEM pass phrase you use to generate the key<br /><br />
+*IMPORTANT:* Remember the PEM pass phrase you use to generate the key<br />
+It doesn't really matter what you put in the other fields, you can even leave them blank<br /><br />
 6. Setup authbind permissions
 ```
 sudo touch /etc/authbind/byport/443
@@ -105,12 +106,13 @@ cd ~/Secure_Login_Demo
 ```
 openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365
 ```
+*IMPORTANT:* Ne pas oublier pas le mot de passe PEM que vous utilisez pour générer la clé<br />
+Les autres champs n'ont pas d'importance, vous pouvez même les laisser vides<br /><br />
 6. Configurer les autorisations du authbind
 ```
 sudo touch /etc/authbind/byport/443
 sudo chmod 777 /etc/authbind/byport/443
 ```
-*IMPORTANT:* Ne pas oublier pas le mot de passe PEM que vous utilisez pour générer la clé<br /><br />
 7. Lancer le serveur HTTPs 'simple_server.py'
 ```
 authbind python3 simple_server.py
