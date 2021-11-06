@@ -192,13 +192,17 @@ class WebServer(BaseHTTPRequestHandler):
 def run(server_class=HTTPServer, handler_class=WebServer, addr="localhost", port=8000):
 	server_address = (addr, port)
 	httpd = server_class(server_address, handler_class)
-	httpd.socket = ssl.wrap_socket(httpd.socket, server_side=True, keyfile="key.pem", certfile="cert.pem", ssl_version=ssl.PROTOCOL_TLS)
-	print(f"Starting http server on {addr}:{port}")
 	try:
-		httpd.serve_forever()
-	except KeyboardInterrupt:
-		pass
-	httpd.server_close()
+		httpd.socket = ssl.wrap_socket(httpd.socket, server_side=True, keyfile="key.pem", certfile="cert.pem", ssl_version=ssl.PROTOCOL_TLS)
+		print(f"Starting http server on {addr}:{port}")
+		try:
+			httpd.serve_forever()
+		except KeyboardInterrupt:
+			pass
+		httpd.server_close()
+	except FileNotFoundError:
+		print("ERROR: Cannot start server, unable to find SSL Certificates")
+		print("Hint: Please review README.md for instructions")
 
 
 # Set Database with demo entry,

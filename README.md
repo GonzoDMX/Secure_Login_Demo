@@ -16,33 +16,43 @@ This is a university project demonstrating a secure user create and login scheme
 ```
 pip3 install cryptography
 ```
-2. Download all files to a common directory
+2. Install authbind (Otherwise the server must be run as root, not reccomended)<br />
+```
+apt install authbind
+```
+*NOTE:* Authbind is used to grant onetime access to port 443, for security, this is preferable to running the server as root.
+3. Download all files to a common directory
 ```
 git clone https://github.com/GonzoDMX/Secure_Login_Demo.git
 ```
-3. Using a terminal go to the ~/Secure_Login_Demo directory
+4. Using a terminal go to the ~/Secure_Login_Demo directory
 ```
 cd ~/Secure_Login_Demo
 ```
-4. Generate a SSL encryption key<br />
+5. Generate a SSL encryption key<br />
 ```
 openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365
 ```
 *IMPORTANT:* Remember the PEM pass phrase you use to generate the key<br /><br />
-5. Launch the HTTPs Server 'simple_server.py' as root
+6. Setup authbind permissions
 ```
-sudo python3 simple_server.py
+sudo touch /etc/authbind/byport/443
+sudo chmod 777 /etc/authbind/byport/443
 ```
-6. Enter root password when prompted<br />
-7. Enter the PEM pass phrase when prompted (that you created in step 4)<br />
-8. Using your favorite web browser go to the following url
+7. Launch the HTTPs Server 'simple_server.py'
+```
+authbind python3 simple_server.py
+```
+8. Enter root password when prompted<br />
+9. Enter the PEM pass phrase when prompted (that you created in step 4)<br />
+10. Using your favorite web browser go to the following url
 ```
 https://localhost
 ```
 *NOTE:* As the SSL certificate is self-signed your web browser may complain about a security risk<br />
 Chrome: click *Advanced* -> *Proceed to localhost (unsafe)*<br />
 Firefox: click *Advanced...* -> *Accept the Risk and Continue*
-9. Try to break the app
+
 
 ## Test Example
 You can create new user accounts by clicking the create user button. One account is already registered when first launching the http server.
@@ -78,33 +88,43 @@ Il s'agit d'un projet universitaire démontrant un schéma sécurisé de créati
 ```
 pip3 install cryptography
 ```
-2. Télécharger tous les fichiers dans un répertoire commun
+2. Install authbind (Otherwise server must be run as root, not reccomended)<br />
+```
+apt install authbind
+```
+*NOTE:* Authbind is used to grant onetime access to port 443, for security, this is preferable to running the server as root.
+3. Télécharger tous les fichiers dans un répertoire commun
 ```
 git clone https://github.com/GonzoDMX/Secure_Login_Demo.git
 ```
-3. A l'aide d'un terminal allez dans le répertoire ~/Secure_Login_Demo
+4. A l'aide d'un terminal allez dans le répertoire ~/Secure_Login_Demo
 ```
 cd ~/Secure_Login_Demo
 ```
-4. Générer une clé de cryptage SSL<br />
+5. Générer une clé de cryptage SSL<br />
 ```
 openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365
 ```
+6. Setup authbind permissions
+```
+sudo touch /etc/authbind/byport/443
+sudo chmod 777 /etc/authbind/byport/443
+```
 *IMPORTANT:* Ne pas oublier pas le mot de passe PEM que vous utilisez pour générer la clé<br /><br />
-5. Lancer le serveur HTTPs 'simple_server.py' en tant que root
+7. Lancer le serveur HTTPs 'simple_server.py'
 ```
-sudo python3 simple_server.py
+authbind python3 simple_server.py
 ```
-6. Entrer le mot de passe root lorsque vous y êtes invité<br />
-7. Entrer le mot de passe PEM lorsque vous y êtes invité (créé à l'étape 4)<br />
-8. À l'aide de votre navigateur Web préféré, accédez à l'URL suivante
+8. Entrer le mot de passe root lorsque vous y êtes invité<br />
+9. Entrer le mot de passe PEM lorsque vous y êtes invité (créé à l'étape 4)<br />
+10. À l'aide de votre navigateur Web préféré, accédez à l'URL suivante
 ```
 https://localhost:8000
 ```
 *NOTE:* Le certificat SSL étant auto-signé, votre navigateur Web peut se plaindre d'un risque de sécurité<br />
 Chrome: cliquer *Advanced* puis *Proceed to localhost (unsafe)*<br />
 Firefox: cliquer *Advanced...* puis *Accept the Risk and Continue*
-9. Essayez de casser l'application
+
 
 ## L'exemple de test
 Vous pouvez créer de nouveaux comptes d'utilisateurs en cliquant sur le bouton 'Create User'. Un compte est déjà enregistré lors du premier lancement du serveur http.
