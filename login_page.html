@@ -12,28 +12,12 @@
 </style>
 </head>
 <body>
-<script type="text/javascript">
-	function checkForm(form) {
-		re = /^\w+$/;
-		if(!re.test(form.user.value)) {
-			alert("The username entered is invalid.");
-			form.user.focus();
-			return false;
-		}
-		if(form.pwd.value.length < 8) {
-			alert("The password entered is not long enough.");
-			form.pwd.focus();
-			return false;
-		}
-		return true;
-	};
-</script>
 
 <img src="assets/logo.jpg" alt="Datathief Logo">
 
 <h1>User Login</h1>
 
-<form name="loginForm" onsubmit="return checkForm(this);" action="" method="POST">
+<form name="loginForm" action="" method="POST">
 	<input type="hidden" id="formId" name="formId" value="login">
 
 	<label for="username">Username:</label><br>

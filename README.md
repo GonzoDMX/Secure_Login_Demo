@@ -1,6 +1,6 @@
 # SECURE LOGIN DEMO
 
-This is a university project demonstrating a secure user create and login scheme. 
+This is a university project demonstrating a secure user create and login scheme. I've implemented various security measures using a python-based HTTP server. The project implements HTTPs, Content Security Policy (CSP), Password hashing, encryption and various access control methods.<br />
 *README en français ci-dessous*
 
 ## The languages used are:
@@ -74,7 +74,7 @@ Lastly, and maybe it doesn't need to be said, this program is not fit for produc
 
 # SECURE LOGIN DEMO_FR
 
-Il s'agit d'un projet universitaire démontrant un schéma sécurisé de création et de connexion d'utilisateurs. 
+Il s'agit d'un projet universitaire démontrant un schéma sécurisé de création et de connexion d'utilisateurs. J'ai mis en place diverses mesures de sécurité à l'aide d'un serveur HTTP basé sur Python. Le projet implémente les HTTPs, la Content Security Policy (CSP), le hachage de mot de passe, le cryptage et diverses méthodes de contrôle d'accès.
 
 ## Les langages de programmation utilisés sont:
 1. **Python 3** (version 3.8.8) - utilisé pour le serveur et le traitement back-end

@@ -34,9 +34,9 @@ valid_pages = list()
 users_path = ".my_accounts.db"
 
 """ CSP Headers to defend agains XSS attacks"""
-login_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-37/2SrUmQiOoXn3BP+MP91PCfSH2HFYamrogydqmFDg=' 'sha256-4BSlqwTfCxFbiFBfWZBcDxmjyvXL2ynJUFqLRCwGFxY='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='"
+login_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-4BSlqwTfCxFbiFBfWZBcDxmjyvXL2ynJUFqLRCwGFxY='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='"
 
-create_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-zWwZgvYmWJv0ndciZpYZDXGL7+ExzX+Qg9OpT8OnO1c=' 'sha256-QOBtvJcHLER/MHDRFA8eJII/SsvBwaFyuzOqI4GNBiM='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='"
+create_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'self' 'sha256-QOBtvJcHLER/MHDRFA8eJII/SsvBwaFyuzOqI4GNBiM='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='"
 
 message_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-fZhG2bh1opVQ+neDYdEzZcNPV/SbhhdP8l+/+xGBdn4='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='"
 

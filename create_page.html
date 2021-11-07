@@ -12,34 +12,12 @@
 </style>
 </head>
 <body>
-<script type="text/javascript">
-	function checkForm(form) {
-		re = /^\w+$/;
-		if(!re.test(form.user.value)) {
-			alert("Error: Username must contain only letters, numbers and underscores!");
-			form.user.focus();
-			return false;
-		}
-		if(form.pwd1.value != "" && form.pwd1.value == form.pwd2.value) {
-			if(form.pwd1.value.length < 8) {
-				alert("Password must contain at least eight characters !");
-				form.pwd1.focus();
-				return false;
-			}
-		} else {
-			alert("The confirm password entered does not match !");
-			form.pwd1.focus();
-			return false;
-		}
-		return true;
-	};
-</script>
 
 <img src="assets/logo.jpg" alt="Datathief Logo">
 
 <h1>Create New User</h1>
 
-<form name="createForm" onsubmit="return checkForm(this);" action="" method="POST">
+<form name="createForm" action="" method="POST">
 	<input type="hidden" id="formId" name="formId" value="create">
 	<label for="user">Username:</label><br>
 	<input id="user" type="text" name="user" required><br><br><br>
@@ -65,6 +43,8 @@
 
 </form>
 
+
+<p id="stat_mess"></p>
 
 <script>
 	document.getElementById("clear").onclick = function () {
