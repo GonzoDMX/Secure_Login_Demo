@@ -34,17 +34,17 @@ valid_pages = list()
 users_path = ".my_accounts.db"
 
 """ CSP Headers to defend agains XSS attacks"""
-login_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-4BSlqwTfCxFbiFBfWZBcDxmjyvXL2ynJUFqLRCwGFxY='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='"
+login_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-4BSlqwTfCxFbiFBfWZBcDxmjyvXL2ynJUFqLRCwGFxY='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='; frame-ancestors 'none'; form-action 'self'"
 
-create_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'self' 'sha256-QOBtvJcHLER/MHDRFA8eJII/SsvBwaFyuzOqI4GNBiM='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='"
+create_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'self' 'sha256-QOBtvJcHLER/MHDRFA8eJII/SsvBwaFyuzOqI4GNBiM='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='; frame-ancestors 'none'; form-action 'self'"
 
-message_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-fZhG2bh1opVQ+neDYdEzZcNPV/SbhhdP8l+/+xGBdn4='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='"
+message_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-fZhG2bh1opVQ+neDYdEzZcNPV/SbhhdP8l+/+xGBdn4='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='; frame-ancestors 'none'; form-action 'self'"
 
-welcome_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-fZhG2bh1opVQ+neDYdEzZcNPV/SbhhdP8l+/+xGBdn4='; img-src 'self'; style-src 'sha256-8nKI3BVBQRYZ/xsA+lWQzWffMS1/2WoV4jzan5Ekct0='"
+welcome_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-fZhG2bh1opVQ+neDYdEzZcNPV/SbhhdP8l+/+xGBdn4='; img-src 'self'; style-src 'sha256-8nKI3BVBQRYZ/xsA+lWQzWffMS1/2WoV4jzan5Ekct0='; frame-ancestors 'none'; form-action 'self'"
 
-error_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-fZhG2bh1opVQ+neDYdEzZcNPV/SbhhdP8l+/+xGBdn4='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='"
+error_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-fZhG2bh1opVQ+neDYdEzZcNPV/SbhhdP8l+/+xGBdn4='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='; frame-ancestors 'none'; form-action 'self'"
 
-collision_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-eP0G2JixgtEZmzxjdbJjtBslaaWwZYGF9OsTEVmz3Wc='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='"
+collision_header = "default-src 'self'; child-src 'none'; object-src 'none'; script-src 'sha256-eP0G2JixgtEZmzxjdbJjtBslaaWwZYGF9OsTEVmz3Wc='; img-src 'self'; style-src 'sha256-TLI54zo4PpnrkdpCMKoxPCugLTUKPc9+4l3zHD3jY5k='; frame-ancestors 'none'; form-action 'self'"
 
 
 """ Simple HTTP Server that handles GET and POST """
@@ -54,6 +54,11 @@ class WebServer(BaseHTTPRequestHandler):
 	def _set_headers(self):
 		self.send_response(200)
 		self.send_header("Content-type", "text/html")
+		self.send_header("X-Content-Type-Options", "nosniff")
+		self.send_header("Cache-Control", "no-store, no-cache, must-revalidate")
+		self.send_header("Access-Control-Allow-Origin", "self")
+		self.send_header("Access-Control-Allow-Methods", "POST, GET")
+		self.send_header("X-Frame-Options", "SAMEORIGIN")
 		if "login_page.html" in self.path:
 			self.send_header("Content-Security-Policy", login_header)
 		elif "create_page.html" in self.path:
@@ -96,7 +101,7 @@ class WebServer(BaseHTTPRequestHandler):
 		# Convert POST data to dictionary of lists
 		parsed_data = up.parse_qs(post_data)
 		form_type = parsed_data['formId'][0]
-		session_id = parsed_data['sessionId'][0]
+		session_id = parsed_data['CSRFToken'][0]
 		if session_id != session_string:
 			# INVALID Session ID, send Client to Timeout Screen
 			self.do_KICK("/session_timeout.html")
